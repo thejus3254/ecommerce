@@ -8,6 +8,9 @@ const hpp = require('hpp');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Trust the reverse proxy (e.g. Render/Vercel) for rate limiting
+app.set('trust proxy', 1);
+
 // Security Headers (Helmet)
 app.use(helmet());
 
