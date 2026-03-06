@@ -12,7 +12,8 @@ export const mainStore = defineStore('main', {
         token: localStorage.getItem('token') || null,
         cart: JSON.parse(localStorage.getItem('cart')) || [],
         products: [],
-        myOrders: []
+        myOrders: [],
+        favorites: []
     }),
     /**
      * GETTERS
@@ -71,6 +72,7 @@ export const mainStore = defineStore('main', {
             localStorage.removeItem('token');
             this.cart = [];
             localStorage.removeItem('cart');
+            this.favorites = [];
         },
         async fetchUser() {
             if (!this.token) return;
@@ -96,6 +98,33 @@ export const mainStore = defineStore('main', {
                 this.myOrders = res.data;
             } catch (error) {
                 console.error("Error fetching my orders:", error);
+            }
+        },
+        async fetchFavorites() {
+            if (!this.token) return;
+            try {
+                const res = await api.get('/favorites/myfavorites');
+                this.favorites = res.data;
+            } catch (error) {
+                console.error("Error fetching favorites:", error);
+            }
+        },
+        async toggleFavorite(product) {
+            if (!this.token) {
+                return; // Optionally redirect to login or throw error depending on component needs
+            }
+
+            const isFav = this.favorites.some(f => f.id === product.id);
+            try {
+                if (isFav) {
+                    await api.delete(`/favorites/${product.id}`);
+                    this.favorites = this.favorites.filter(f => f.id !== product.id);
+                } else {
+                    await api.post(`/favorites/${product.id}`);
+                    this.favorites.push(product);
+                }
+            } catch (error) {
+                console.error("Error toggling favorite:", error);
             }
         },
         addToCart(product) {

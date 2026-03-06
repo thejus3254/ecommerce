@@ -1,6 +1,11 @@
 <template>
     <div class="product-card animate-fade-in-up" :style="{ animationDelay: `${index * 0.1}s` }">
         <div class="product-image-container">
+            <button v-if="store.user && store.user.role !== 'admin'" class="favorite-btn"
+                :class="{ active: isFavorite }" @click.prevent="store.toggleFavorite(product)"
+                aria-label="Toggle Favorite">
+                ♥
+            </button>
             <div class="product-image" :style="{ backgroundImage: `url(${product.image_url})` }"></div>
         </div>
         <div class="product-info">
@@ -19,11 +24,12 @@
 </template>
 
 <script setup>
+import { computed } from 'vue';
 import { mainStore } from '../store';
 
 const store = mainStore();
 
-defineProps({
+const props = defineProps({
     product: {
         type: Object,
         required: true
@@ -33,6 +39,8 @@ defineProps({
         default: 0
     }
 });
+
+const isFavorite = computed(() => store.favorites.some(f => f.id === props.product.id));
 
 defineEmits(['add-to-cart']);
 </script>
@@ -59,6 +67,36 @@ defineEmits(['add-to-cart']);
     overflow: hidden;
     padding: 2rem;
     background: #ffffff;
+    position: relative;
+}
+
+.favorite-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    z-index: 10;
+    transition: var(--transition);
+    color: #d2d2d7;
+    font-size: 1.4rem;
+    line-height: 1;
+}
+
+.favorite-btn:hover {
+    transform: scale(1.1);
+}
+
+.favorite-btn.active {
+    color: #ff3b30;
 }
 
 .product-image {

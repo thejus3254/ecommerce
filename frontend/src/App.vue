@@ -24,6 +24,10 @@ const store = mainStore();
 
 onMounted(async () => {
   await store.fetchUser();
+  if (store.isAuthenticated) {
+    store.fetchMyOrders();
+    store.fetchFavorites();
+  }
 });
 </script>
 

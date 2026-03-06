@@ -46,6 +46,15 @@ const initDB = async () => {
       );
     `;
 
+    const createFavoritesTable = `
+      CREATE TABLE IF NOT EXISTS favorites (
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        product_id INTEGER REFERENCES products(id) ON DELETE CASCADE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (user_id, product_id)
+      );
+    `;
+
     await db.query(createUsersTable);
     console.log('Users table created or exists.');
     await db.query(createProductsTable);
@@ -54,6 +63,8 @@ const initDB = async () => {
     console.log('Orders table created or exists.');
     await db.query(createOrderItemsTable);
     console.log('Order Items table created or exists.');
+    await db.query(createFavoritesTable);
+    console.log('Favorites table created or exists.');
 
     // Seed data if products table is empty
     const productCountResult = await db.query('SELECT COUNT(*) FROM products');

@@ -1,9 +1,17 @@
 <template>
     <header class="navbar glass">
         <div class="container nav-content">
-            <router-link to="/" class="brand">Art Supplies 🎨</router-link>
+            <div class="brand-group">
+                <router-link to="/" class="brand">Art Supplies 🎨</router-link>
+                <div v-if="isAuthenticated" class="user-greeting">
+                    <span>Hi, {{ store.user?.name }}!</span>
+                    <span v-if="store.user?.role === 'admin'" class="admin-badge">Admin</span>
+                </div>
+            </div>
             <nav class="nav-links">
                 <router-link to="/">Shop</router-link>
+                <router-link v-if="isAuthenticated && store.user?.role !== 'admin'" to="/favorites"
+                    class="nav-link">Favorites</router-link>
                 <router-link v-if="store.user?.role !== 'admin'" to="/cart" class="cart-link">
                     Cart <span class="cart-badge" v-if="cartItemsCount > 0">{{ cartItemsCount }}</span>
                 </router-link>
@@ -13,10 +21,6 @@
                         style="padding: 8px 18px; margin-left:10px;">Sign Up</router-link>
                 </template>
                 <template v-else>
-                    <div class="user-greeting">
-                        <span>Hi, {{ store.user?.name }}!</span>
-                        <span v-if="store.user?.role === 'admin'" class="admin-badge">Admin</span>
-                    </div>
                     <router-link v-if="store.user?.role !== 'admin'" to="/orders" class="nav-link">My
                         Orders</router-link>
                     <router-link v-if="store.user?.role === 'admin'" to="/admin" class="nav-link">Admin
@@ -59,6 +63,12 @@ const handleLogout = () => {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.brand-group {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
 }
 
 .brand {

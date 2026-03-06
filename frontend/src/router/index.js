@@ -6,6 +6,7 @@ import CartView from '../views/CartView.vue';
 import CheckoutView from '../views/CheckoutView.vue';
 import AdminView from '../views/AdminView.vue';
 import OrdersView from '../views/OrdersView.vue';
+import FavoritesView from '../views/FavoritesView.vue';
 import { mainStore } from '../store';
 
 const router = createRouter({
@@ -47,6 +48,12 @@ const router = createRouter({
             path: '/orders',
             name: 'orders',
             component: OrdersView,
+            meta: { requiresAuth: true }
+        },
+        {
+            path: '/favorites',
+            name: 'favorites',
+            component: FavoritesView,
             meta: { requiresAuth: true }
         }
     ]
