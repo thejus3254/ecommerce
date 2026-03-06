@@ -114,4 +114,24 @@ const handleLogout = () => {
     margin-left: 5px;
     vertical-align: super;
 }
+
+@media (max-width: 768px) {
+    .brand {
+        font-size: 1.1rem;
+    }
+
+    .nav-links {
+        gap: 0.8rem;
+        font-size: 0.75rem;
+    }
+
+    .user-greeting {
+        display: none;
+        /* Hide greeting on small screens to save space */
+    }
+
+    .btn-primary {
+        padding: 6px 12px !important;
+    }
+}
 </style>

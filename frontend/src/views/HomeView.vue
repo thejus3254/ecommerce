@@ -71,4 +71,24 @@ const addToCart = (product) => {
   padding: 4rem;
   color: var(--text-light);
 }
+
+@media (max-width: 768px) {
+  .hero {
+    margin: 3rem 0 2rem 0;
+  }
+
+  .hero h1 {
+    font-size: 2.3rem;
+  }
+
+  .hero p {
+    font-size: 1.1rem;
+    padding: 0 10px;
+  }
+
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.5rem;
+  }
+}
 </style>

@@ -124,4 +124,23 @@ defineEmits(['add-to-cart']);
     font-size: 13px;
     font-weight: 500;
 }
+
+@media (max-width: 768px) {
+    .product-image-container {
+        height: 180px;
+        padding: 1rem;
+    }
+
+    .product-info {
+        padding: 1rem;
+    }
+
+    .product-info h3 {
+        font-size: 1.25rem;
+    }
+
+    .price {
+        font-size: 1.3rem;
+    }
+}
 </style>
