@@ -1,21 +1,42 @@
 :root {
+  /* Neumorphic Base Color Palette */
+  --background: #e0e5ec;
+  --surface: #e0e5ec;
+
+  /* Text Accents */
+  --text-main: #2d3436;
+  --text-light: #636e72;
   --primary: #0071e3;
-  --primary-dark: #0077ed;
-  --primary-light: #e8f0fe;
-  --secondary: #1d1d1f;
-  --background: #f5f5f7;
-  --surface: #ffffff;
-  --text-main: #1d1d1f;
-  --text-light: #86868b;
-  --danger: #e3000f;
-  --success: #008744;
-  --border: #d2d2d7;
-  --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.02);
-  --shadow: 0 5px 15px rgba(0, 0, 0, 0.04);
-  --shadow-hover: 0 10px 30px rgba(0, 0, 0, 0.08);
+  --primary-dark: #005bb5;
+  --danger: #ff3b30;
+  --success: #34c759;
+  --border: rgba(0, 0, 0, 0.05);
+
+  /* Structural Variables */
   --radius: 18px;
   --radius-lg: 24px;
+  --radius-pill: 980px;
   --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+  /* Neumorphic 3D Shadow Tokens */
+  --shadow-protrude: 9px 9px 16px rgb(163, 177, 198, 0.6), -9px -9px 16px rgba(255, 255, 255, 0.5);
+  --shadow-inset: inset 6px 6px 10px 0 rgba(163, 177, 198, 0.7), inset -6px -6px 10px 0 rgba(255, 255, 255, 0.8);
+  --shadow-protrude-sm: 4px 4px 8px rgb(163, 177, 198, 0.6), -4px -4px 8px rgba(255, 255, 255, 0.5);
+  --shadow-hover: 12px 12px 20px rgb(163, 177, 198, 0.7), -12px -12px 20px rgba(255, 255, 255, 0.6);
+}
+
+/* Neumorphic Utility Classes */
+.neo-surface {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-protrude);
+}
+
+.neo-inset {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-inset);
+  border: none;
 }
 
 * {
@@ -51,42 +72,58 @@ button {
 }
 
 .btn {
-  display: inline-block;
-  padding: 8px 16px;
-  border-radius: 980px;
-  font-size: 14px;
-  font-weight: 400;
-  letter-spacing: -0.01em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  font-size: 0.95rem;
   transition: var(--transition);
-  text-align: center;
-  position: relative;
-  overflow: hidden;
+  /* Make buttons 3D protruding by default */
+  background: var(--surface);
+  color: var(--primary);
+  box-shadow: var(--shadow-protrude-sm);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+.btn:active {
+  /* Crush the button directly into the screen */
+  transform: translateY(1px);
+  box-shadow: var(--shadow-inset) !important;
 }
 
 .btn-primary {
-  background-color: var(--primary);
+  /* Colored Neumorphic (optional variation) */
+  background: var(--primary);
   color: white;
-  border: none;
+  box-shadow: 4px 4px 10px rgba(0, 113, 227, 0.4), -2px -2px 6px rgba(255, 255, 255, 0.3);
 }
 
 .btn-primary:hover {
   background-color: var(--primary-dark);
+  box-shadow: 6px 6px 14px rgba(0, 113, 227, 0.5), -2px -2px 8px rgba(255, 255, 255, 0.4);
   transform: scale(1.02);
 }
 
 .btn-primary:active {
+  box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.3), inset -2px -2px 6px rgba(255, 255, 255, 0.2) !important;
   transform: scale(0.98);
 }
 
 .btn-secondary {
-  background: transparent;
+  background: var(--surface);
   color: var(--primary);
-  border: 2px solid var(--primary);
 }
 
 .btn-secondary:hover {
-  background: var(--primary);
-  color: white;
+  color: var(--primary-dark);
 }
 
 .form-group {
@@ -100,28 +137,35 @@ button {
   color: var(--secondary);
 }
 
-.form-group input {
+.form-group input,
+.form-group select,
+.form-group textarea {
   width: 100%;
-  padding: 12px;
-  border: 1px solid var(--border);
+  padding: 14px 18px;
+  border: none;
   border-radius: var(--radius);
   font-size: 1rem;
+  color: var(--text-main);
+  background: var(--surface);
+  box-shadow: var(--shadow-inset);
   transition: var(--transition);
 }
 
-.form-group input:focus {
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
   outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(155, 89, 182, 0.1);
+  box-shadow: inset 8px 8px 14px 0 rgba(163, 177, 198, 0.8), inset -8px -8px 14px 0 rgba(255, 255, 255, 0.9);
 }
 
 /* Utilities */
 .glass {
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(224, 229, 236, 0.75);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  /* Apple dark nav */
+  /* Use neumorphic border for glassy components */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
 }
 
 /* Animations */

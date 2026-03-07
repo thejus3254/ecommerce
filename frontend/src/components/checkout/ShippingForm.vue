@@ -1,5 +1,5 @@
 <template>
-    <div class="form-section">
+    <div class="form-section neo-surface">
         <h3>Shipping Details</h3>
         <div class="form-group">
             <label>Full Name</label>
@@ -50,12 +50,11 @@ const updateField = (field, value) => {
 
 <style scoped>
 .form-section {
-    background: #ffffff;
+    background: var(--surface);
     padding: 2rem;
     border-radius: var(--radius-lg);
     margin-bottom: 1.5rem;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    box-shadow: var(--shadow-sm);
+    border: none;
 }
 
 .form-section h3 {
@@ -71,29 +70,4 @@ const updateField = (field, value) => {
     gap: 1rem;
 }
 
-.form-group {
-    margin-bottom: 1.5rem;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    color: var(--secondary);
-}
-
-.form-group input {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    font-size: 1rem;
-    transition: var(--transition);
-}
-
-.form-group input:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.1);
-}
 </style>

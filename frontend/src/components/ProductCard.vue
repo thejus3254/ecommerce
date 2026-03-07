@@ -1,5 +1,5 @@
 <template>
-    <div class="product-card animate-fade-in-up" :style="{ animationDelay: `${index * 0.1}s` }">
+    <div class="product-card neo-surface animate-fade-in-up" :style="{ animationDelay: `${index * 0.1}s` }">
         <div class="product-image-container">
             <button v-if="store.user && store.user.role !== 'admin'" class="favorite-btn"
                 :class="{ active: isFavorite }" @click.prevent="store.toggleFavorite(product)"
@@ -47,26 +47,25 @@ defineEmits(['add-to-cart']);
 
 <style scoped>
 .product-card {
-    background: #ffffff;
+    background: var(--surface);
     border-radius: var(--radius-lg);
     overflow: hidden;
-    box-shadow: var(--shadow-sm);
-    transition: var(--transition);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     border: none;
     display: flex;
     flex-direction: column;
 }
 
 .product-card:hover {
-    transform: translateY(-8px);
-    box-shadow: var(--shadow-hover);
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 16px 16px 30px rgba(163,177,198, 0.8), -16px -16px 30px rgba(255,255,255, 0.9);
 }
 
 .product-image-container {
     height: 250px;
     overflow: hidden;
     padding: 2rem;
-    background: #ffffff;
+    background: transparent;
     position: relative;
 }
 

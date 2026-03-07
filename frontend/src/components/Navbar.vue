@@ -1,5 +1,5 @@
 <template>
-    <header class="navbar glass">
+    <header class="navbar glass neo-surface">
         <div class="container nav-content">
             <div class="brand-group">
                 <router-link to="/" class="brand">Art Supplies 🎨</router-link>
@@ -56,7 +56,7 @@ const handleLogout = () => {
     z-index: 1000;
     padding: 1rem 0;
     border-bottom: none;
-    box-shadow: var(--shadow-sm);
+    /* Remove old shadow, rely on neo-surface */
 }
 
 .nav-content {
@@ -74,7 +74,7 @@ const handleLogout = () => {
 .brand {
     font-size: 1.25rem;
     font-weight: 600;
-    color: #f5f5f7;
+    color: var(--text-main);
     letter-spacing: -0.01em;
 }
 
@@ -87,12 +87,12 @@ const handleLogout = () => {
 }
 
 .nav-links a {
-    color: #d2d2d7;
+    color: var(--text-main);
     transition: color 0.2s;
 }
 
 .nav-links a:hover {
-    color: #f5f5f7;
+    color: var(--primary);
 }
 
 .cart-link {
@@ -112,7 +112,7 @@ const handleLogout = () => {
 }
 
 .user-greeting {
-    color: #86868b;
+    color: var(--text-light);
 }
 
 .admin-badge {

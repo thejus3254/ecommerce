@@ -1,6 +1,6 @@
 <template>
   <div class="auth-container animate-fade-in">
-    <div class="auth-card">
+    <div class="auth-card neo-surface">
       <h2>Create Account</h2>
       <p class="subtitle">Join our community of artists</p>
 
@@ -94,10 +94,9 @@ const callback = async (response) => {
   background: var(--surface);
   padding: 3rem;
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-hover);
   width: 100%;
   max-width: 450px;
-  border: 1px solid var(--border);
+  border: none;
 }
 
 h2 {
