@@ -1,7 +1,8 @@
 const db = require('../config/db');
-const redisClient = require('../config/redisClient');
+const NodeCache = require('node-cache');
 
-const CACHE_TTL = 300; // 5 minutes in seconds
+// Initialize cache with a Time-To-Live of 5 minutes (300 seconds)
+const cache = new NodeCache({ stdTTL: 300 });
 
 /**
  * Fetch all products in the platform.
@@ -13,20 +14,17 @@ const CACHE_TTL = 300; // 5 minutes in seconds
  */
 exports.getProducts = async (req, res, next) => {
     try {
-        // Try to get data from Redis cache
-        const cachedProducts = await redisClient.get('all_products');
+        const cacheKey = 'all_products';
+        const cachedProducts = cache.get(cacheKey);
 
         if (cachedProducts) {
-            console.log('Serving products from Redis cache');
-            return res.json(JSON.parse(cachedProducts));
+            return res.json(cachedProducts);
         }
 
-        console.log('Fetching products from database');
-        const result = await db.query('SELECT * FROM products ORDER BY created_at DESC');
+        const result = await db.query('SELECT * FROM products ORDER BY id ASC');
 
-        // Store in Redis cache (EX sets the expiration time in seconds)
-        await redisClient.setEx('all_products', CACHE_TTL, JSON.stringify(result.rows));
-
+        // Save the fresh result to the cache
+        cache.set(cacheKey, result.rows);
         res.json(result.rows);
     } catch (err) {
         next(err);
@@ -45,11 +43,10 @@ exports.getProductById = async (req, res, next) => {
     try {
         const { id } = req.params;
         const cacheKey = `product_${id}`;
+        const cachedProduct = cache.get(cacheKey);
 
-        const cachedProduct = await redisClient.get(cacheKey);
         if (cachedProduct) {
-            console.log(`Serving product ${id} from Redis cache`);
-            return res.json(JSON.parse(cachedProduct));
+            return res.json(cachedProduct);
         }
 
         const result = await db.query('SELECT * FROM products WHERE id = $1', [id]);
@@ -58,7 +55,8 @@ exports.getProductById = async (req, res, next) => {
             return res.status(404).json({ msg: 'Product not found' });
         }
 
-        await redisClient.setEx(cacheKey, CACHE_TTL, JSON.stringify(result.rows[0]));
+        // Save the specific product to cache
+        cache.set(cacheKey, result.rows[0]);
         res.json(result.rows[0]);
     } catch (err) {
         next(err);
@@ -78,11 +76,11 @@ exports.createProduct = async (req, res, next) => {
     try {
         const result = await db.query(
             'INSERT INTO products (name, description, price, image_url, category, stock) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-            [name, description, price, image_url, category, stock]
+            [name, description, price, image_url, category, stock || 0]
         );
 
-        // Invalidate the 'all_products' cache whenever a new product is added
-        await redisClient.del('all_products');
+        // Invalidate the 'all_products' cache so the new product shows up instantly for everyone
+        cache.del('all_products');
 
         res.status(201).json(result.rows[0]);
     } catch (err) {
@@ -103,19 +101,15 @@ exports.updateProduct = async (req, res, next) => {
     const { name, description, price, image_url, category, stock } = req.body;
     try {
         const result = await db.query(
-            `UPDATE products 
-             SET name = $1, description = $2, price = $3, image_url = $4, category = $5, stock = $6
-             WHERE id = $7 RETURNING *`,
+            'UPDATE products SET name = $1, description = $2, price = $3, image_url = $4, category = $5, stock = $6 WHERE id = $7 RETURNING *',
             [name, description, price, image_url, category, stock, id]
         );
-
         if (result.rows.length === 0) {
             return res.status(404).json({ msg: 'Product not found' });
         }
 
-        // Invalidate specific product cache and the main products list
-        await redisClient.del(`product_${id}`);
-        await redisClient.del('all_products');
+        // Invalidate both the master list and this specific product's cache
+        cache.del(['all_products', `product_${id}`]);
 
         res.json(result.rows[0]);
     } catch (err) {
@@ -139,8 +133,7 @@ exports.deleteProduct = async (req, res, next) => {
         }
 
         // Invalidate both the master list and this specific product's cache
-        await redisClient.del(`product_${id}`);
-        await redisClient.del('all_products');
+        cache.del(['all_products', `product_${id}`]);
 
         res.json({ msg: 'Product deleted' });
     } catch (err) {
