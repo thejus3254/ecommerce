@@ -4,6 +4,7 @@ const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const hpp = require('hpp');
+const compression = require('compression');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -13,6 +14,9 @@ app.set('trust proxy', 1);
 
 // Security Headers (Helmet)
 app.use(helmet());
+
+// Compress all HTTP responses (dramatically reduces JSON payload sizes)
+app.use(compression());
 
 // CORS configuration
 const corsOptions = {

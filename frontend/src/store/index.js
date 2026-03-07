@@ -11,7 +11,7 @@ export const mainStore = defineStore('main', {
         user: null,
         token: localStorage.getItem('token') || null,
         cart: JSON.parse(localStorage.getItem('cart')) || [],
-        products: [],
+        products: JSON.parse(localStorage.getItem('products_cache')) || [],
         myOrders: [],
         favorites: []
     }),
@@ -85,8 +85,14 @@ export const mainStore = defineStore('main', {
         },
         async fetchProducts() {
             try {
+                // Fetch fresh data from backend (Stale-While-Revalidate pattern)
                 const res = await api.get('/products');
+
+                // Update Pinia state
                 this.products = res.data;
+
+                // Persist to local storage for instant 0ms loads next time
+                localStorage.setItem('products_cache', JSON.stringify(this.products));
             } catch (error) {
                 console.error("Error fetching products:", error);
             }
